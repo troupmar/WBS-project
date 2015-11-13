@@ -5,9 +5,13 @@ In addition, your web site should integrate concepts from the course in a meanin
 
 The web site should have the following characteristics:
 1. Appealing look and feel. The pages should have a good layout, with some graphics and readable content.
+
 2. Consistent look and feel, where all pages share a similar design and navigation scheme.
+
 3. Easy to navigate.
+
 4. Works on different browsers (test on at least 3 different browsers).
+
 5. It should be the group's own work. Do not include packages or themes downloaded from the internet.
 
 The Web site should have the following functionality:
