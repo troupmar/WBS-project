@@ -19,3 +19,5 @@ The Web site should have the following functionality:
 4. Allow graduates to login and manage their profile. The graduates should be allowed (but not required) to upload a photo.
 5. Require login to access the social networking part of the web site.
 6. They should be allowed to change privacy setting to control what can be seen by friedns, by other graduates, public. The user selects a list of friends.
+
+test
