@@ -4,11 +4,11 @@ Create a web site for which the main pages are public and offer the list of all 
 In addition, your web site should integrate concepts from the course in a meaningful form. This includes server side scripting, client side scripting, SQL database access, AJAX, authentication, forms, sessions. It should implement security features we covered in class. In particular, it should be resistant to SQL injection and cross-site request forgery.
 
 The web site should have the following characteristics:
-1) Appealing look and feel. The pages should have a good layout, with some graphics and readable content.
-2) Consistent look and feel, where all pages share a similar design and navigation scheme.
-3) Easy to navigate.
-4) Works on different browsers (test on at least 3 different browsers).
-5) It should be the group's own work. Do not include packages or themes downloaded from the internet.
+1. Appealing look and feel. The pages should have a good layout, with some graphics and readable content.
+2. Consistent look and feel, where all pages share a similar design and navigation scheme.
+3. Easy to navigate.
+4. Works on different browsers (test on at least 3 different browsers).
+5. It should be the group's own work. Do not include packages or themes downloaded from the internet.
 
 The Web site should have the following functionality:
 1) Allow to display the list of graduates in different formates (by year, alphabetic, etc.)
