@@ -1,0 +1,14 @@
+// update Martin
+
+CREATE TABLE users
+(
+first_name varchar(50) NOT NULL,
+last_name varchar(50) NOT NULL,
+username varchar(50) NOT NULL,
+password varchar(100) NOT NULL,
+graduation_year int(4) NOT NULL,
+date_of_birth date,
+profile_photo varchar(100),
+about varchar(1000),
+PRIMARY KEY (username)
+);
