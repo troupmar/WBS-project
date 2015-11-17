@@ -1,4 +1,4 @@
-## GIT REPOSITORY INIT
+## GIT REPOSITORY INIT ##
 
 1) create a directory where you want to have your project saved
 [in console]
