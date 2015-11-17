@@ -1,5 +1,5 @@
 ## GIT REPOSITORY INIT ##
-
+-------------------------
 1) create a directory where you want to have your project saved
 [in console]
 2) cd /absolute_path/your_created_directory
@@ -7,11 +7,13 @@
    git remote add origin https://github.com/troupmar/WBS-project.git
 
 ## GIT PULL (IF PROJECT NOT DOWNLOADED -> DOWNLOAD ELSE UPDATE EXISTING PROJECT) ##
+-----------------------------------------------------------------------------------
 [in console]
 1) cd /absolute_path/your_created_directory
 2) git pull
 
 ## GIT PUSH (UPLOAD YOUR CHANGES TO THE SERVER REPOSITORY - https://github.com/troupmar/WBS-project.git) ##
+-----------------------------------------------------------------------------------------------------------
 [in console]
 1) cd /absolute_path/your_created_directory
 // index created files to the repository
