@@ -1,41 +1,42 @@
 <?php
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
 
 abstract class Template
 {
-	public function __construct() 
-	{
-		ob_start();
-		session_start();
-
-	}
-
 	public function render($title) 
 	{
 		echo "
 			<html>
 			 <head>
 			  <title>$title</title>
+			  ";
+		foreach ($this->get_css_files() as $css_path)
+		{
+			echo "<link rel='stylesheet' type='text/css' href='./include/css/" . $css_path ."'>";
+		}
+		foreach ($this->get_js_files() as $js_path)
+		{
+			echo "<script src='./include/js/" . $js_path . "'></script>";
+		}
+		echo "
 			 </head>
 			 <body>
 			  <ul class='navigation'>
-			   <li class='main-logo'><a href=''>Alumni.edu</a></li>
+			   <li class='main-logo'><a href='alumni.php'>Alumni.edu</a></li>
 			   <li><a href=''>Store</a></li>
 			   <li><a href=''>Edit profile</a></li>
 			   <li><a href=''>Communicate</a></li>
 			   ";
-			   if (isset($_POST['username']) && isset($_POST['password']))
-			   {
-				   	echo "
-				   <li><a href=''>Register</a></li>
-				   <li><a href=''>Log in</a></li>
+			    if (isset($_SESSION['username']) && isset($_SESSION['password']))
+			    {
+					echo "
+				   <li><a href='alumni.php?page=logout'>Log out</a></li>
 				   ";
-				} 
-				else
+			    } 
+			    else
 				{
 					echo "
-				   <li><a href=''>Log out</a></li>
+				   <li><a href='alumni.php?page=register'>Register</a></li>
+				   <li><a href='alumni.php?page=login'>Log in</a></li>
 				   ";
 				}
 				echo "
@@ -51,6 +52,16 @@ abstract class Template
 	}
 
 	abstract protected function renderBody();
+
+	protected function get_css_files() 
+	{
+		return array();
+	}
+
+	protected function get_js_files()
+	{
+		return array();
+	}
 }
 
 ?>

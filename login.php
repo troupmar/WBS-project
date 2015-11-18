@@ -9,18 +9,17 @@ class Login extends Template
 	protected function renderBody() 
 	{
 		echo "<h1>Log in</h1>";
-		if (isset($_POST)) 
+		if (! empty($_POST)) 
 		{
-			if (isset($_POST['username']) && isset($_POST['password']))
+			if (! empty($_POST['username']) && ! empty($_POST['password']))
 			{	
 				$conn = Connection::get_instance();
 				$user_model = new User_model($conn->get_connection());
 				$user = $user_model->get_user_by_username($_POST['username']);
 				if (isset($user))
 				{
-					$_SESSION['username'] = $username;
-					$_SESSION['password'] = $password;
-					
+					$_SESSION['username'] = $user->get_username();
+					$_SESSION['password'] = $user->get_password();
 					if (isset($_SESSION['redirect']))
 					{
 						// redirect to previous page if set to session
@@ -31,7 +30,7 @@ class Login extends Template
 						// redirect to the main page
 						$host  = $_SERVER['HTTP_HOST'];
 						$uri  = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-						$page = 'alumni.php?page=whatever'; 
+						$page = 'alumni.php'; 
 						header("Location: http://$host$uri/$page");
 					}
 					ob_flush();
@@ -54,7 +53,7 @@ class Login extends Template
 		}
 	}
 
-	function render_login_form()
+	private function render_login_form()
 	{
 		echo "<form action='alumni.php?page=login' method='post'>
 			     <label>Username</label>
@@ -65,8 +64,8 @@ class Login extends Template
 
 				<button type='submit'>Log in</button>
 			  </form>";
-
 	}
+
 }
 
 ?>

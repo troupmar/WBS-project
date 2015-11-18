@@ -8,10 +8,10 @@ class Register extends Template
 {
 	protected function renderBody() 
 	{
-		if (isset($_POST)) 
+		if (! empty($_POST)) 
 		{
-			if (isset($_POST['first-name']) && isset($_POST['last-name']) 
-				&& isset($_POST['username']) && isset($_POST['password']) && isset($_POST['graduation-year']))
+			if (! empty($_POST['first-name']) && ! empty($_POST['last-name']) 
+				&& ! empty($_POST['username']) && ! empty($_POST['password']) && ! empty($_POST['graduation-year']))
 			{	
 				$user = array('first-name' => $_POST['first-name'], 'last-name' => $_POST['last-name'],
 							  'username' => $_POST['username'], 'password' => $_POST['password'], 
