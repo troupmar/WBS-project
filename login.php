@@ -11,8 +11,15 @@ class Login extends Template
 		echo "<h1>Log in</h1>";
 		if (! empty($_POST)) 
 		{
-			if (! empty($_POST['username']) && ! empty($_POST['password']))
-			{	
+			$errors =  $this->validate_username(isset($_POST['username']) ? $_POST['username'] : "");
+			$errors .= $this->validate_password(isset($_POST['password']) ? $_POST['password'] : "");
+
+			if ($errors)
+			{
+				$this->render_login_form($errors);
+			}	
+			else
+			{
 				$conn = Connection::get_instance();
 				$user_model = new User_model($conn->get_connection());
 				$user = $user_model->get_user_by_username($_POST['username']);
@@ -27,24 +34,14 @@ class Login extends Template
 					}
 					else
 					{
-						// redirect to the main page
-						$host  = $_SERVER['HTTP_HOST'];
-						$uri  = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-						$page = 'alumni.php'; 
-						header("Location: http://$host$uri/$page");
+						$this->redirect_to_main_page();
 					}
 					ob_flush();
 				}
 				else 
 				{
-					echo "<p class='error'>Invalid username or password.</p>";
-					$this->render_login_form();	
+					$this->render_login_form('Invalid username or password.');	
 				}
-			}
-			else
-			{
-				echo "<p class='error'>Invalid username or password.</p>";
-				$this->render_login_form();	
 			}
 		}
 		else
@@ -53,17 +50,33 @@ class Login extends Template
 		}
 	}
 
-	private function render_login_form()
+	protected function get_js_files() 
 	{
-		echo "<form action='alumni.php?page=login' method='post'>
+		return array("validation.js");
+	}
+
+	private function render_login_form($error_message = null)
+	{
+		echo "<p id='error-message'>$error_message</p>
+			  <form action='alumni.php?page=login' method='post' onsubmit='return validateLoginForm(this);'>
 			     <label>Username</label>
-			     <input type='text' name='username'placeholder='username'>
+			     <input type='text' name='username' placeholder='username'>
 	
 			     <label>Password</label>
 			     <input type='password' name='password' placeholder='password'>
 
 				<button type='submit'>Log in</button>
 			  </form>";
+	}
+
+	private function validate_username($username)
+	{
+		return ($username == "") ? "Username cannot be empty!<br />" : null;
+	}
+
+	private function validate_password($password)
+	{
+		return ($password == "") ? "Password cannot be empty!<br />" : null;
 	}
 
 }

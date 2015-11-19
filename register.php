@@ -10,31 +10,33 @@ class Register extends Template
 	{
 		if (! empty($_POST)) 
 		{
-			if (! empty($_POST['first-name']) && ! empty($_POST['last-name']) 
-				&& ! empty($_POST['username']) && ! empty($_POST['password']) && ! empty($_POST['graduation-year']))
-			{	
+			$errors =  $this->validate_first_name(isset($_POST['first-name']) ? $_POST['first-name'] : "");
+			$errors .= $this->validate_last_name(isset($_POST['last-name']) ? $_POST['last-name'] : "");
+			$errors .= $this->validate_username(isset($_POST['username']) ? $_POST['username'] : "");
+			$errors .= $this->validate_password(isset($_POST['password']) ? $_POST['password'] : "");
+			$errors .= $this->validate_graduation_year(isset($_POST['graduation-year']) ? $_POST['graduation-year'] : "");
+
+			if ($errors)
+			{
+				$this->render_register_form($errors);
+			}
+			else 
+			{
 				$user = array('first-name' => $_POST['first-name'], 'last-name' => $_POST['last-name'],
 							  'username' => $_POST['username'], 'password' => $_POST['password'], 
 							  'graduation-year' => $_POST['graduation-year']);
-
 
 				$conn = Connection::get_instance();
 				$user_model = new User_model($conn->get_connection());
 
 				if ($user_model->store_user($user) == false)
 				{
-					echo "<p class='error'>Username already exists.</p>";
-					$this->render_register_form();
+					$this->render_register_form('Username already exists.');
 				}
 				else
 				{
-					echo "<p class='success'>User was succesfully registered!</p>";
+					$this->redirect_to_main_page();
 				}
-			}
-			else
-			{
-				echo "<p class='error'>All fields must be filled.</p>";
-				$this->render_register_form();	
 			}
 		}
 		else
@@ -43,10 +45,15 @@ class Register extends Template
 		}
 	}
 
-
-	private function render_register_form() 
+	protected function get_js_files() 
 	{
-		echo "<form action='alumni.php?page=register' method='post'>
+		return array("validation.js");
+	}
+
+	private function render_register_form($error_message = null) 
+	{
+		echo "<p id='error-message'>$error_message</p>
+			  <form action='alumni.php?page=register' method='post' onsubmit='return validateRegisterForm(this);'>
 			    <label>First name</label>
 			    <input type='text' name='first-name' class='form-control' placeholder='First name'>
 				
@@ -64,6 +71,31 @@ class Register extends Template
 
 				<button type='submit' class='btn btn-default'>Register</button>
 			  </form>";
+	}
+
+	private function validate_first_name($first_name)
+	{
+		return ($first_name == "") ? "First name cannot be empty!<br />" : null;
+	}
+
+	private function validate_last_name($last_name)
+	{
+		return ($last_name == "") ? "Last name cannot be empty!<br />" : null;
+	}
+
+	private function validate_username($username)
+	{
+		return ($username == "") ? "Username cannot be empty!<br />" : null;
+	}
+
+	private function validate_password($password)
+	{
+		return ($password == "") ? "Password cannot be empty!<br />" : null;
+	}
+
+	private function validate_graduation_year($graduation_year)
+	{
+		return ($graduation_year == "") ? "Graduation year cannot be empty!<br />" : null;	
 	}
 
 }

@@ -23,12 +23,14 @@ abstract class Template
 			  <ul class='navigation'>
 			   <li class='main-logo'><a href='alumni.php'>Alumni.edu</a></li>
 			   <li><a href=''>Store</a></li>
-			   <li><a href=''>Edit profile</a></li>
 			   <li><a href=''>Communicate</a></li>
 			   ";
 			    if (isset($_SESSION['username']) && isset($_SESSION['password']))
 			    {
+			    	$username = $_SESSION['username'];
 					echo "
+				   <li>$username</li>
+				   <li><a href=''>Edit profile</a></li>
 				   <li><a href='alumni.php?page=logout'>Log out</a></li>
 				   ";
 			    } 
@@ -61,6 +63,15 @@ abstract class Template
 	protected function get_js_files()
 	{
 		return array();
+	}
+
+	protected function redirect_to_main_page()
+	{
+		// redirect to the main page
+		$host  = $_SERVER['HTTP_HOST'];
+		$uri  = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+		$page = 'alumni.php'; 
+		header("Location: http://$host$uri/$page");
 	}
 }
 

@@ -26,7 +26,6 @@ class User_model extends Model
 			$about 				= $user->get_about();
 
 			$query  = "INSERT INTO users VALUES('$first_name', '$last_name', '$username', '$password', '$graduation_year', '$d_o_b', '$profile_photo', '$about')";
-			print_r($query);
   			$result = $this->conn->query($query);
   			if (! $result) 
   			{
