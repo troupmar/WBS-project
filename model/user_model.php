@@ -1,7 +1,7 @@
 <?php
 
-require_once('model.php');
-require_once('user.php');
+require_once('model/model.php');
+require_once('model/user.php');
 
 class User_model extends Model
 {
@@ -9,6 +9,7 @@ class User_model extends Model
 	// Store the user, if exists - return false otherwise return true
 	public function store_user($user_data)
 	{
+		$user_data = $this->sanitize_array($user_data);
 		$user = $this->get_user_instance($user_data);
 		if ($this->get_user_by_username($user->get_username()))
 		{
@@ -48,7 +49,7 @@ class User_model extends Model
 		for ($i=0; $i<$result->num_rows; $i++)
 		{
 			$result->data_seek($i);
-			$users[$i] = get_user_instance($result->fetch_assoc());
+			$users[$i] = $this->get_user_instance($result->fetch_assoc());
 		}
 		return $users;
 
@@ -78,17 +79,31 @@ class User_model extends Model
 		}
 	}
 
+	public function get_user_by_username_and_password($username, $password)
+	{
+		$user = $this->get_user_by_username($username);
+		if (! $user)
+		{
+			return null;
+		}
+		if ($this->create_password($user->get_username(), $password) === $user->get_password())
+		{
+			return $user;
+		}
+		return null;
+	}
+
 	private function get_user_instance($array)
 	{
 		$user = new User();
-		$user->set_first_name(isset($array['first-name']) ? $this->sanitize_string($array['first-name']) : null);
-		$user->set_last_name(isset($array['last-name']) ? $this->sanitize_string($array['last-name']) : null);
-		$user->set_username(isset($array['username']) ? $this->sanitize_string($array['username']) : null);
-		$user->set_password(isset($array['password']) ? $this->sanitize_string($array['password']) : null);
-		$user->set_d_o_b(isset($array['d-o-b']) ? $this->sanitize_string($array['d-o-b']) : null);
-		$user->set_graduation_year(isset($array['graduation-year']) ? $this->sanitize_string($array['graduation-year']) : null);
-		$user->set_profile_photo(isset($array['profile-photo']) ? $this->sanitize_string($array['profile-photo']) : null);
-		$user->set_about(isset($array['about']) ? $this->sanitize_string($array['about']) : null);
+		$user->set_first_name(isset($array['first_name']) ? $array['first_name'] : null);
+		$user->set_last_name(isset($array['last_name']) ? $array['last_name'] : null);
+		$user->set_username(isset($array['username']) ? $array['username'] : null);
+		$user->set_password(isset($array['password']) ? $array['password'] : null);
+		$user->set_d_o_b(isset($array['d_o_b']) ? $array['d_o_b'] : null);
+		$user->set_graduation_year(isset($array['graduation_year']) ? $array['graduation_year'] : null);
+		$user->set_profile_photo(isset($array['profile_photo']) ? $array['profile_photo'] : null);
+		$user->set_about(isset($array['about']) ? $array['about'] : null);
 		return $user;
 	}
 

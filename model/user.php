@@ -90,6 +90,19 @@ class User
 	{
 		$this->about = $about;
 	}
+
+	public function to_json() {
+        return json_encode(array(
+            'fist-name' 		=> $this->first_name,
+            'last-name' 		=> $this->last_name,
+            'username'  		=> $this->username,
+            'password'  		=> $this->password,
+            'graduation-year'  	=> $this->graduation_year,
+            'd-o-b'  			=> $this->d_o_b,
+            'profile-photo'  	=> $this->profile_photo,
+            'about'  			=> $this->about
+        ));
+    }
 }
 
 ?>

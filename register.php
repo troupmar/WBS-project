@@ -22,9 +22,9 @@ class Register extends Template
 			}
 			else 
 			{
-				$user = array('first-name' => $_POST['first-name'], 'last-name' => $_POST['last-name'],
+				$user = array('first_name' => $_POST['first-name'], 'last_name' => $_POST['last-name'],
 							  'username' => $_POST['username'], 'password' => $_POST['password'], 
-							  'graduation-year' => $_POST['graduation-year']);
+							  'graduation_year' => $_POST['graduation-year']);
 
 				$conn = Connection::get_instance();
 				$user_model = new User_model($conn->get_connection());
