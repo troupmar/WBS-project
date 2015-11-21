@@ -62,7 +62,7 @@ abstract class Template
 
 	protected function get_js_files()
 	{
-		return array();
+		return array('jquery1.11.3.min.js');
 	}
 
 	protected function redirect_to_main_page()

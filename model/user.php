@@ -93,7 +93,7 @@ class User
 
 	public function to_json() {
         return json_encode(array(
-            'fist-name' 		=> $this->first_name,
+            'first-name' 		=> $this->first_name,
             'last-name' 		=> $this->last_name,
             'username'  		=> $this->username,
             'password'  		=> $this->password,

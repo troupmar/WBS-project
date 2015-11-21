@@ -41,18 +41,45 @@ class User_model extends Model
 	{
 		$query = "SELECT * FROM users";
 		$result = $this->conn->query($query);
-		if (! $result)
-		{
-			die ("Database access failed: " . $this->conn->error);
-		}
-		$users = array();
-		for ($i=0; $i<$result->num_rows; $i++)
-		{
-			$result->data_seek($i);
-			$users[$i] = $this->get_user_instance($result->fetch_assoc());
-		}
-		return $users;
+		$this->handle_db_result_error($result);
 
+		return $this->get_users_from_table($result);
+	}
+
+	// Get all users sorted by surname - parameter order: ASC | DESC
+	public function get_users_sort_by_name($order)
+	{
+		return $this->get_sorted_users('last_name', $order);
+	}
+
+	// Get all users sorted by graduation year - parameter order: ASC | DESC
+	public function get_users_sort_by_grad_year($order)
+	{
+		return $this->get_sorted_users('graduation_year', $order);
+	}
+
+	// Get all users sorted by given parameter and in given order: ASC | DESC
+	private function get_sorted_users($param, $order)
+	{
+		$query = null;
+		switch ($order)
+		{
+			case 'ASC':
+				$query = "SELECT * FROM users ORDER BY $param";
+				break;
+			case 'DESC':
+				$query = "SELECT * FROM users ORDER BY $param DESC";
+				break;
+		}
+		
+		if ($query)
+		{
+			$result = $this->conn->query($query);
+			$this->handle_db_result_error($result);
+			$users = $this->get_users_from_table($result);
+			return $users;
+		}
+		return null;
 	}
 
 
@@ -79,6 +106,7 @@ class User_model extends Model
 		}
 	}
 
+	// Get user by username & password
 	public function get_user_by_username_and_password($username, $password)
 	{
 		$user = $this->get_user_by_username($username);
@@ -93,6 +121,19 @@ class User_model extends Model
 		return null;
 	}
 
+	// Get table of users from a database and transform it to the array of User objects
+	private function get_users_from_table($table)
+	{
+		$users = array();
+		for ($i=0; $i<$table->num_rows; $i++)
+		{
+			$table->data_seek($i);
+			$users[$i] = $this->get_user_instance($table->fetch_assoc());
+		}
+		return $users;
+	}
+
+	// Get a row from a database representing a user and transform it to User object
 	private function get_user_instance($array)
 	{
 		$user = new User();
@@ -107,6 +148,7 @@ class User_model extends Model
 		return $user;
 	}
 
+	// Create password, using ripemd128 hash and static salt
 	private function create_password($username, $plain_password)
 	{
 		$salt = "%(*_Dw)#";

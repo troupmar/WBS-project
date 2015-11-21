@@ -27,7 +27,14 @@ abstract class Model
 		}
 		return $sanitized_array;
 	}
-	
+
+	protected function handle_db_result_error($result)
+	{
+		if (! $result)
+		{
+			die ("Database access failed: " . $this->conn->error);
+		}
+	}
 }
 
 ?>
