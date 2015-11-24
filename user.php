@@ -20,11 +20,11 @@ if (isset($_GET['data']))
 				echo parse_users_to_json($users);
 			}
 			break;
-		case "users-sort-by-grad-year":
+		case "users-sort-by-academic-year":
 			if (isset($_GET['order']))
 			{
 				$user_model = new User_model();
-				$users = $user_model->get_users_sort_by_grad_year($_GET['order']);
+				$users = $user_model->get_users_sort_by_academic_year($_GET['order']);
 				header('Content-type: application/json');
 				echo parse_users_to_json($users);
 			}

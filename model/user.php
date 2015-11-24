@@ -6,10 +6,12 @@ class User
 	private $last_name;
 	private $username;
 	private $password;
-	private $graduation_year;
-	private $d_o_b;
+	private $academic_year;
+	private $term;
+	private $major;
+	private $level_code;
+	private $degree;
 	private $profile_photo;
-	private $about;
 	
 	public function get_first_name() 
 	{
@@ -31,24 +33,34 @@ class User
 		return $this->password;
 	}
 
-	public function get_graduation_year() 
+	public function get_academic_year() 
 	{
-		return $this->graduation_year;
+		return $this->academic_year;
 	}
 
-	public function get_d_o_b() 
+	public function get_term() 
 	{
-		return isset($this->d_o_b) ? $this->d_o_b : null;
+		return $this->term;
+	}
+
+	public function get_major() 
+	{
+		return $this->major;
+	}
+
+	public function get_level_code() 
+	{
+		return $this->level_code;
+	}
+
+	public function get_degree() 
+	{
+		return $this->degree;
 	}
 
 	public function get_profile_photo() 
 	{
 		return $this->profile_photo;
-	}
-
-	public function get_about() 
-	{
-		return $this->about;
 	}
 
 	public function set_first_name($first_name) 
@@ -71,24 +83,34 @@ class User
 		$this->password = $password;
 	}
 
-	public function set_graduation_year($graduation_year) 
+	public function set_academic_year($academic_year) 
 	{
-		$this->graduation_year = $graduation_year;
+		$this->academic_year = $academic_year;
 	}
 
-	public function set_d_o_b($d_o_b) 
+	public function set_term($term) 
 	{
-		$this->d_o_b = $d_o_b;
+		$this->term = $term;
+	}
+
+	public function set_major($major) 
+	{
+		$this->term = $major;
+	}
+
+	public function set_level_code($level_code) 
+	{
+		$this->level_code = $level_code;
+	}
+
+	public function set_degree($degree) 
+	{
+		$this->degree = $degree;
 	}
 
 	public function set_profile_photo($profile_photo) 
 	{
 		$this->profile_photo = $profile_photo;
-	}
-
-	public function set_about($about) 
-	{
-		$this->about = $about;
 	}
 
 	public function to_json() {
@@ -97,10 +119,12 @@ class User
             'last-name' 		=> $this->last_name,
             'username'  		=> $this->username,
             'password'  		=> $this->password,
-            'graduation-year'  	=> $this->graduation_year,
-            'd-o-b'  			=> $this->d_o_b,
-            'profile-photo'  	=> $this->profile_photo,
-            'about'  			=> $this->about
+            'academic-year'  	=> $this->academic_year,
+            'term'  			=> $this->term,
+            'major'  			=> $this->major,
+            'level-code'  		=> $this->level_code,
+            'degree'  			=> $this->degree,
+            'profile-photo'  	=> $this->profile_photo
         ));
     }
 }

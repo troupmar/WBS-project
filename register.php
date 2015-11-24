@@ -14,7 +14,7 @@ class Register extends Template
 			$errors .= $this->validate_last_name(isset($_POST['last-name']) ? $_POST['last-name'] : "");
 			$errors .= $this->validate_username(isset($_POST['username']) ? $_POST['username'] : "");
 			$errors .= $this->validate_password(isset($_POST['password']) ? $_POST['password'] : "");
-			$errors .= $this->validate_graduation_year(isset($_POST['graduation-year']) ? $_POST['graduation-year'] : "");
+			$errors .= $this->validate_academic_year(isset($_POST['academic-year']) ? $_POST['academic-year'] : "");
 
 			if ($errors)
 			{
@@ -24,12 +24,12 @@ class Register extends Template
 			{
 				$user = array('first_name' => $_POST['first-name'], 'last_name' => $_POST['last-name'],
 							  'username' => $_POST['username'], 'password' => $_POST['password'], 
-							  'graduation_year' => $_POST['graduation-year']);
+							  'academic_year' => $_POST['academic-year']);
 
 				$conn = Connection::get_instance();
 				$user_model = new User_model($conn->get_connection());
 
-				if ($user_model->store_user($user) == false)
+				if ($user_model->store_user($user, true) == false)
 				{
 					$this->render_register_form('Username already exists.');
 				}
@@ -47,7 +47,9 @@ class Register extends Template
 
 	protected function get_js_files() 
 	{
-		return array("validation.js");
+		$js_files = parent::get_js_files();
+		array_push($js_files, "validation.js");
+		return $js_files;
 	}
 
 	private function render_register_form($error_message = null) 
@@ -61,7 +63,7 @@ class Register extends Template
 			    <input type='text' name='last-name' class='form-control' placeholder='Last name'>
 
 			    <label>Graduation year</label>
-			    <input type='text' name='graduation-year' class='form-control' placeholder='graduation-year'>
+			    <input type='text' name='academic-year' class='form-control' placeholder='academic-year'>
 				
 			    <label>Username</label>
 			    <input type='text' name='username' class='form-control' placeholder='username'>
@@ -93,9 +95,27 @@ class Register extends Template
 		return ($password == "") ? "Password cannot be empty!<br />" : null;
 	}
 
-	private function validate_graduation_year($graduation_year)
+	// TODO CHECK!!
+	private function validate_academic_year($academic_year)
 	{
-		return ($graduation_year == "") ? "Graduation year cannot be empty!<br />" : null;	
+		if ($academic_year == "") 
+		{
+			return "Gradudation year input cannot be empty!<br />";
+		}
+	
+		if (! preg_match("/^[0-9]{4}-[0-9]{2}$/", $academic_year)) 
+		{
+			return "Academic year wrong format! Correct input i.e. 1999-20";
+		}
+		$years = explode("-", $academic_year);
+		$next_year = $years[0] + 1;
+		//echo $years[0] . " " . $years[1] . " " . date("Y") . " " . $academic_year; die;
+		if ($years[0] < 1900 || $years[1] > date("Y") || $years[1] != substr($next_year, 2)) {
+			return "Academic year must be between 1900 and " . date("Y") . "<br />";
+		} 
+
+		return null;
+	
 	}
 
 }

@@ -52,7 +52,9 @@ class Login extends Template
 
 	protected function get_js_files() 
 	{
-		return array("validation.js");
+		$js_files = parent::get_js_files();
+		array_push($js_files, "validation.js");
+		return $js_files;
 	}
 
 	private function render_login_form($error_message = null)

@@ -7,33 +7,38 @@ class User_model extends Model
 {
 
 	// Store the user, if exists - return false otherwise return true
-	public function store_user($user_data)
+	public function store_user($user_data, $register = false)
 	{
 		$user_data = $this->sanitize_array($user_data);
 		$user = $this->get_user_instance($user_data);
-		if ($this->get_user_by_username($user->get_username()))
+		if ($register)
 		{
-			return false;
+			if ($this->get_user_by_username($user->get_username()))
+			{
+				return false;
+			}
 		}
-		else
-		{
-			$first_name 		= $user->get_first_name();
-			$last_name 			= $user->get_last_name();
-			$username 			= $user->get_username();
-			$password 			= $this->create_password($user->get_username(), $user->get_password());
-			$d_o_b 				= $user->get_d_o_b();
-			$graduation_year 	= $user->get_graduation_year();
-			$profile_photo 		= $user->get_profile_photo();
-			$about 				= $user->get_about();
+		
+		$first_name 		= $user->get_first_name();
+		$last_name 			= $user->get_last_name();
+		$username 			= $user->get_username();
+		$password 			= $this->create_password($user->get_username(), $user->get_password());
+		$academic_year	 	= $user->get_academic_year();
+		$term			 	= $user->get_term();
+		$major			 	= $user->get_major();
+		$level_code 		= $user->get_level_code();
+		$degree		 		= $user->get_degree();
+		$profile_photo 		= $user->get_profile_photo();
+		
 
-			$query  = "INSERT INTO users VALUES('$first_name', '$last_name', '$username', '$password', '$graduation_year', '$d_o_b', '$profile_photo', '$about')";
-  			$result = $this->conn->query($query);
-  			if (! $result) 
-  			{
-  				die ("Database access failed: " . $this->conn->error);
-  			}
-  			return true;
-  		}
+		$query  = "INSERT INTO users VALUES('$first_name', '$last_name', '$username', '$password', '$academic_year', '$term', 
+			'$major', '$level_code', '$degree', '$profile_photo')";
+			$result = $this->conn->query($query);
+			if (! $result) 
+			{
+				die ("Database access failed: " . $this->conn->error);
+			}
+		return true;
 	}
 
 	// Get all users
@@ -53,9 +58,9 @@ class User_model extends Model
 	}
 
 	// Get all users sorted by graduation year - parameter order: ASC | DESC
-	public function get_users_sort_by_grad_year($order)
+	public function get_users_sort_by_academic_year($order)
 	{
-		return $this->get_sorted_users('graduation_year', $order);
+		return $this->get_sorted_users('academic_year', $order);
 	}
 
 	// Get all users sorted by given parameter and in given order: ASC | DESC
@@ -141,10 +146,12 @@ class User_model extends Model
 		$user->set_last_name(isset($array['last_name']) ? $array['last_name'] : null);
 		$user->set_username(isset($array['username']) ? $array['username'] : null);
 		$user->set_password(isset($array['password']) ? $array['password'] : null);
-		$user->set_d_o_b(isset($array['d_o_b']) ? $array['d_o_b'] : null);
-		$user->set_graduation_year(isset($array['graduation_year']) ? $array['graduation_year'] : null);
+		$user->set_academic_year(isset($array['academic_year']) ? $array['academic_year'] : null);
+		$user->set_term(isset($array['term']) ? $array['term'] : null);
+		$user->set_major(isset($array['major']) ? $array['major'] : null);
+		$user->set_level_code(isset($array['level_code']) ? $array['level_code'] : null);
+		$user->set_degree(isset($array['degree']) ? $array['degree'] : null);
 		$user->set_profile_photo(isset($array['profile_photo']) ? $array['profile_photo'] : null);
-		$user->set_about(isset($array['about']) ? $array['about'] : null);
 		return $user;
 	}
 

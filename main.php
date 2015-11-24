@@ -12,13 +12,13 @@ class Main extends Template
 			   <option selected disabled>Choose here</option>
 		       <option value='last-name-asc'>By last name in ascending order</option>
 		       <option value='last-name-desc'>By last name in descending order</option>
-		  	   <option value='grad-date-asc'>By graduation year in ascending order</option>
-		  	   <option value='grad-date-desc'>By graduation year in descending order</option>
+		  	   <option value='academic-year-asc'>By academic year in ascending order</option>
+		  	   <option value='academic-year-desc'>By academic year in descending order</option>
 			  </select>
 			  <table id='alumni-list'>
 			   <tr>
 			   	<th>Name</th>
-			   	<th>Graduation Year</th>
+			   	<th>Academic year</th>
 			   </tr>";
 		$user_model = new User_model();
 		$users = $user_model->get_users();
@@ -26,7 +26,7 @@ class Main extends Template
 		{
 			echo "<tr>
 				   <td>" . $user->get_first_name() . " " . $user->get_last_name() . "</td>
-				   <td>" . $user->get_graduation_year() . "</td>
+				   <td>" . $user->get_academic_year() . "</td>
 				  </tr>";
 		}
 		echo "</table>";
