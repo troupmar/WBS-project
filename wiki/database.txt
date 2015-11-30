@@ -12,5 +12,6 @@ major varchar(5),
 level_code varchar(5),
 degree varchar(7),
 profile_photo varchar(500),
+visibility int(1) DEFAULT 0,
 PRIMARY KEY (username)
 );
