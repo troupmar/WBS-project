@@ -29,10 +29,11 @@ class User_model extends Model
 		$level_code 		= $user->get_level_code();
 		$degree		 		= $user->get_degree();
 		$profile_photo 		= $user->get_profile_photo();
+		$visibility			= $user->get_visibility();
 		
 
 		$query  = "INSERT INTO users VALUES('$first_name', '$last_name', '$username', '$password', '$academic_year', '$term', 
-			'$major', '$level_code', '$degree', '$profile_photo')";
+			'$major', '$level_code', '$degree', '$profile_photo', '$visibility')";
 			$result = $this->conn->query($query);
 			if (! $result) 
 			{
@@ -152,6 +153,7 @@ class User_model extends Model
 		$user->set_level_code(isset($array['level_code']) ? $array['level_code'] : null);
 		$user->set_degree(isset($array['degree']) ? $array['degree'] : null);
 		$user->set_profile_photo(isset($array['profile_photo']) ? $array['profile_photo'] : null);
+		$user->set_visibility(isset($array['visibility']) ? $array['visibility'] : 0);
 		return $user;
 	}
 

@@ -12,6 +12,7 @@ class User
 	private $level_code;
 	private $degree;
 	private $profile_photo;
+	private $visibility;
 	
 	public function get_first_name() 
 	{
@@ -61,6 +62,11 @@ class User
 	public function get_profile_photo() 
 	{
 		return $this->profile_photo;
+	}
+
+	public function get_visibility() 
+	{
+		return $this->visibility;
 	}
 
 	public function set_first_name($first_name) 
@@ -113,6 +119,11 @@ class User
 		$this->profile_photo = $profile_photo;
 	}
 
+	public function set_visibility($visibility) 
+	{
+		$this->visibility = $visibility;
+	}
+
 	public function to_json() {
         return json_encode(array(
             'first-name' 		=> $this->first_name,
@@ -124,7 +135,8 @@ class User
             'major'  			=> $this->major,
             'level-code'  		=> $this->level_code,
             'degree'  			=> $this->degree,
-            'profile-photo'  	=> $this->profile_photo
+            'profile-photo'  	=> $this->profile_photo,
+            'visibility'		=> $this->visibility,
         ));
     }
 }
