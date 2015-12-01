@@ -10,7 +10,7 @@ class User_model extends Model
 	public function store_user($user_data, $register = false)
 	{
 		$user_data = $this->sanitize_array($user_data);
-		$user = $this->get_user_instance($user_data);
+		$user = $this->get_object($user_data);
 		if ($register)
 		{
 			if ($this->get_user_by_username($user->get_username()))
@@ -34,11 +34,9 @@ class User_model extends Model
 
 		$query  = "INSERT INTO users VALUES('$first_name', '$last_name', '$username', '$password', '$academic_year', '$term', 
 			'$major', '$level_code', '$degree', '$profile_photo', '$visibility')";
-			$result = $this->conn->query($query);
-			if (! $result) 
-			{
-				die ("Database access failed: " . $this->conn->error);
-			}
+		$result = $this->conn->query($query);
+		$this->handle_db_result_error($result);
+
 		return true;
 	}
 
@@ -49,7 +47,7 @@ class User_model extends Model
 		$result = $this->conn->query($query);
 		$this->handle_db_result_error($result);
 
-		return $this->get_users_from_table($result);
+		return $this->get_objects_from_table($result);
 	}
 
 	// Get all users sorted by surname - parameter order: ASC | DESC
@@ -67,25 +65,16 @@ class User_model extends Model
 	// Get all users sorted by given parameter and in given order: ASC | DESC
 	private function get_sorted_users($param, $order)
 	{
-		$query = null;
-		switch ($order)
+		$query = "SELECT * FROM users ORDER BY $param";
+		if ($order == "DESC")
 		{
-			case 'ASC':
-				$query = "SELECT * FROM users ORDER BY $param";
-				break;
-			case 'DESC':
-				$query = "SELECT * FROM users ORDER BY $param DESC";
-				break;
+			$query .= " DESC";
 		}
 		
-		if ($query)
-		{
-			$result = $this->conn->query($query);
-			$this->handle_db_result_error($result);
-			$users = $this->get_users_from_table($result);
-			return $users;
-		}
-		return null;
+		$result = $this->conn->query($query);
+		$this->handle_db_result_error($result);
+		$users = $this->get_objects_from_table($result);
+		return $users;
 	}
 
 
@@ -96,15 +85,12 @@ class User_model extends Model
 		$query = "SELECT * FROM users WHERE username='$username' LIMIT 1";
 
 		$result = $this->conn->query($query);
-		if (! $result) 
-		{
-			die ("Database access failed: " . $this->conn->error);
-		}
+		$this->handle_db_result_error($result);
 
 		if ($result->num_rows > 0)
 		{
 			$result->data_seek(0);
-			return $this->get_user_instance($result->fetch_assoc());
+			return $this->get_object($result->fetch_assoc());
 		}
 		else
 		{
@@ -127,20 +113,8 @@ class User_model extends Model
 		return null;
 	}
 
-	// Get table of users from a database and transform it to the array of User objects
-	private function get_users_from_table($table)
-	{
-		$users = array();
-		for ($i=0; $i<$table->num_rows; $i++)
-		{
-			$table->data_seek($i);
-			$users[$i] = $this->get_user_instance($table->fetch_assoc());
-		}
-		return $users;
-	}
-
 	// Get a row from a database representing a user and transform it to User object
-	private function get_user_instance($array)
+	protected function get_object($array)
 	{
 		$user = new User();
 		$user->set_first_name(isset($array['first_name']) ? $array['first_name'] : null);
@@ -153,7 +127,7 @@ class User_model extends Model
 		$user->set_level_code(isset($array['level_code']) ? $array['level_code'] : null);
 		$user->set_degree(isset($array['degree']) ? $array['degree'] : null);
 		$user->set_profile_photo(isset($array['profile_photo']) ? $array['profile_photo'] : null);
-		$user->set_visibility(isset($array['visibility']) ? $array['visibility'] : 0);
+		$user->set_visibility(isset($array['visibility']) ? $array['visibility'] : 2);
 		return $user;
 	}
 

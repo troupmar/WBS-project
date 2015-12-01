@@ -1,4 +1,11 @@
-// update Martin
+CREATE TABLE posts
+(
+id int NOT NULL AUTO_INCREMENT,
+username varchar(50) NOT NULL,
+insert_time datetime NOT NULL,
+post varchar(1000) NOT NULL,
+PRIMARY KEY (id)
+);
 
 CREATE TABLE users
 (

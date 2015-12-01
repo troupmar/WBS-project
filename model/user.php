@@ -136,7 +136,7 @@ class User
             'level-code'  		=> $this->level_code,
             'degree'  			=> $this->degree,
             'profile-photo'  	=> $this->profile_photo,
-            'visibility'		=> $this->visibility,
+            'visibility'		=> $this->visibility
         ));
     }
 }

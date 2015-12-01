@@ -6,7 +6,7 @@ require_once('model/user_model.php');
 
 class Register extends Template
 {
-	protected function renderBody() 
+	protected function render_body() 
 	{
 		if (! empty($_POST)) 
 		{
@@ -105,7 +105,7 @@ class Register extends Template
 	
 		if (! preg_match("/^[0-9]{4}-[0-9]{2}$/", $academic_year)) 
 		{
-			return "Academic year wrong format! Correct input i.e. 1999-20";
+			return "Academic year wrong format! Correct input i.e. 2003-04";
 		}
 		$years = explode("-", $academic_year);
 		$next_year = $years[0] + 1;

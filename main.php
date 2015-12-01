@@ -4,7 +4,7 @@ require_once('template.php');
 
 class Main extends Template
 {
-	protected function renderBody() 
+	protected function render_body() 
 	{
 		echo "<h1>Alumni</h1>
 			  Sort alumni
@@ -24,8 +24,11 @@ class Main extends Template
 		$users = $user_model->get_users();
 		foreach ($users as $user)
 		{
+
+			$username = $user->get_username();
 			echo "<tr>
-				   <td>" . $user->get_first_name() . " " . $user->get_last_name() . "</td>
+				   <td><a href='alumni.php?page=profile&username=$username'</a>" . 
+				   $user->get_first_name() . " " . $user->get_last_name() . "</td>
 				   <td>" . $user->get_academic_year() . "</td>
 				  </tr>";
 		}

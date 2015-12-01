@@ -6,7 +6,7 @@ require_once('model/user_model.php');
 
 class Login extends Template
 {
-	protected function renderBody() 
+	protected function render_body() 
 	{
 		echo "<h1>Log in</h1>";
 		if (! empty($_POST)) 

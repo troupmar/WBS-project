@@ -23,7 +23,7 @@ abstract class Template
 			  <ul class='navigation'>
 			   <li class='main-logo'><a href='alumni.php'>Alumni.edu</a></li>
 			   <li><a href=''>Store</a></li>
-			   <li><a href=''>Communicate</a></li>
+			   <li><a href='alumni.php?page=communicate'>Communicate</a></li>
 			   ";
 			    if (isset($_SESSION['username']) && isset($_SESSION['password']))
 			    {
@@ -45,7 +45,7 @@ abstract class Template
 			  </ul>
 			  <div class='content'>
 			  ";
-		 $this->renderBody();
+		 $this->render_body();
 		 echo "
 		 	  </div>
 			 </body>
@@ -53,7 +53,7 @@ abstract class Template
 			";
 	}
 
-	abstract protected function renderBody();
+	abstract protected function render_body();
 
 	protected function get_css_files() 
 	{

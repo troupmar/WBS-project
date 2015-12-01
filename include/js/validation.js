@@ -43,7 +43,7 @@ function validateAcademicYear(field) {
 		return "Gradudation year input cannot be empty!<br />";
 	}
 	if (! field.match(/^[0-9]{4}-[0-9]{2}$/)) {
-		return "Academic year wrong format! Correct input i.e. 1999-20";
+		return "Academic year wrong format! Correct input i.e. 2003-04";
 	}
 
 	var year = field.split("-")[0];

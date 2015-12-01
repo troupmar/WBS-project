@@ -1,4 +1,5 @@
 <?php
+
 require_once('connection.php');
 
 abstract class Model
@@ -35,6 +36,20 @@ abstract class Model
 			die ("Database access failed: " . $this->conn->error);
 		}
 	}
+
+	// Get appropriate table and transform it to an array of appropriate objects
+	protected function get_objects_from_table($table_rows)
+	{
+		$users = array();
+		for ($i=0; $i<$table_rows->num_rows; $i++)
+		{
+			$table_rows->data_seek($i);
+			$users[$i] = $this->get_object($table_rows->fetch_assoc());
+		}
+		return $users;
+	}
+
+	abstract protected function get_object($array);
 }
 
 ?>
