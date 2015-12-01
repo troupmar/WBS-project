@@ -7,6 +7,18 @@ function validate(errors) {
 	}
 }
 
+function validateFilterForm(form) {
+	errors = '';
+	if (form['year'] !== undefined) {
+		errors = validateAcademicYear(form['year']);
+	} else if (form['first-name'] !== undefined) {
+		errors = validateFirstName(form['first-name']);
+	} else if (form['last-name'] !== undefined) {
+		errors = validateLastName(form['last-name']);
+	}
+	return validate(errors);
+}
+
 function validateLoginForm(form) {
 	errors =  validateUsername(form['username'].value);
 	errors += validatePassword(form['password'].value);

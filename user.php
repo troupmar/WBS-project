@@ -11,20 +11,47 @@ if (isset($_GET['data']))
 			header('Content-type: application/json');
 			echo parse_users_to_json($users);
 			break;
-		case "users-sort-by-name":
+		case "users-sorted-by-last-name":
 			if (isset($_GET['order']))
 			{
 				$user_model = new User_model();
-				$users = $user_model->get_users_sort_by_name($_GET['order']);
+				$users = $user_model->get_users_sorted_by_last_name($_GET['order']);
 				header('Content-type: application/json');
 				echo parse_users_to_json($users);
 			}
 			break;
-		case "users-sort-by-academic-year":
+		case "users-sorted-by-academic-year":
 			if (isset($_GET['order']))
 			{
 				$user_model = new User_model();
-				$users = $user_model->get_users_sort_by_academic_year($_GET['order']);
+				$users = $user_model->get_users_sorted_by_academic_year($_GET['order']);
+				header('Content-type: application/json');
+				echo parse_users_to_json($users);
+			}
+			break;
+		case "users-filtered-by-first-name":
+			if (isset($_GET['filter'])) 
+			{
+				$user_model = new User_model();
+				$users = $user_model->get_users_filtered_by_first_name($_GET['filter']);
+				header('Content-type: application/json');
+				echo parse_users_to_json($users);
+			}
+			break;
+		case "users-filtered-by-last-name":
+			if (isset($_GET['filter'])) 
+			{
+				$user_model = new User_model();
+				$users = $user_model->get_users_filtered_by_last_name($_GET['filter']);
+				header('Content-type: application/json');
+				echo parse_users_to_json($users);
+			}
+			break;
+		case "users-filtered-by-academic-year":
+			if (isset($_GET['filter'])) 
+			{
+				$user_model = new User_model();
+				$users = $user_model->get_users_filtered_by_academic_year($_GET['filter']);
 				header('Content-type: application/json');
 				echo parse_users_to_json($users);
 			}

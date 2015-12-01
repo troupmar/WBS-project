@@ -14,7 +14,24 @@ class Main extends Template
 		       <option value='last-name-desc'>By last name in descending order</option>
 		  	   <option value='academic-year-asc'>By academic year in ascending order</option>
 		  	   <option value='academic-year-desc'>By academic year in descending order</option>
+			  </select><br />
+			  
+			  <p id='error-message'></p>
+			  Filter alumni
+			  <select id='filter-alumni'>
+			   <option selected disabled>Choose here</option>
+		       <option value='year'>By year</option>
+		       <option value='first-name'>By first name</option>
+		       <option value='last-name'>By last name</option>
 			  </select>
+
+			  <div id='filter-alumni-form'>
+			   <input id='filter-alumni-text' type='text'></input>
+			   <button id='alumni-filter-button'>Filter</button>
+			   <button id='alumni-all-button'>Get All</button>
+			  </div>
+
+
 			  <table id='alumni-list'>
 			   <tr>
 			   	<th>Name</th>
@@ -40,9 +57,17 @@ class Main extends Template
 	protected function get_js_files()
 	{
 		$js_files = parent::get_js_files();
-		array_push($js_files, 'main.js');
+		array_push($js_files, 'validation.js', 'main.js');
 		return $js_files;
 	}
+
+	protected function get_css_files()
+	{
+		$js_files = parent::get_css_files();
+		array_push($js_files, 'main.css');
+		return $js_files;
+	}
+
 }
 
 ?>

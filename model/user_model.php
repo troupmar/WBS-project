@@ -50,14 +50,14 @@ class User_model extends Model
 		return $this->get_objects_from_table($result);
 	}
 
-	// Get all users sorted by surname - parameter order: ASC | DESC
-	public function get_users_sort_by_name($order)
+	// Get all users sorted by last name - parameter order: ASC | DESC
+	public function get_users_sorted_by_last_name($order)
 	{
 		return $this->get_sorted_users('last_name', $order);
 	}
 
 	// Get all users sorted by graduation year - parameter order: ASC | DESC
-	public function get_users_sort_by_academic_year($order)
+	public function get_users_sorted_by_academic_year($order)
 	{
 		return $this->get_sorted_users('academic_year', $order);
 	}
@@ -65,12 +65,43 @@ class User_model extends Model
 	// Get all users sorted by given parameter and in given order: ASC | DESC
 	private function get_sorted_users($param, $order)
 	{
+		$param = $this->sanitize_string($param);
 		$query = "SELECT * FROM users ORDER BY $param";
 		if ($order == "DESC")
 		{
 			$query .= " DESC";
 		}
 		
+		$result = $this->conn->query($query);
+		$this->handle_db_result_error($result);
+		$users = $this->get_objects_from_table($result);
+		return $users;
+	}
+
+	// Get all users filtered by academic year
+	public function get_users_filtered_by_academic_year($filter)
+	{
+		return $this->get_filtered_users('academic_year', $filter);
+	}
+
+	// Get all users filtered by first name
+	public function get_users_filtered_by_first_name($filter)
+	{
+		return $this->get_filtered_users('first_name', $filter);
+	}
+
+	// Get all users filtered by last name
+	public function get_users_filtered_by_last_name($filter)
+	{
+		return $this->get_filtered_users('last_name', $filter);
+	}
+
+	// Get all users filtered by given field with given value
+	private function get_filtered_users($field, $filter)
+	{
+		$field = $this->sanitize_string($field);
+		$filter = $this->sanitize_string($filter);
+		$query = "SELECT * FROM users WHERE $field='$filter'";
 		$result = $this->conn->query($query);
 		$this->handle_db_result_error($result);
 		$users = $this->get_objects_from_table($result);
