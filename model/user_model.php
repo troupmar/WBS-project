@@ -1,19 +1,27 @@
 <?php
 
-require_once('model/model.php');
-require_once('model/user.php');
+
+require_once(__DIR__ . '/model.php');
+require_once(__DIR__ . '/user.php');
 
 class User_model extends Model
 {
 
 	// Store the user, if exists - return false otherwise return true
-	public function store_user($user_data, $register = false)
+	public function store_user($user_data, $register = false, $import = false)
 	{
 		$user_data = $this->sanitize_array($user_data);
 		$user = $this->get_object($user_data);
 		if ($register)
 		{
 			if ($this->get_user_by_username($user->get_username()))
+			{
+				return false;
+			}
+		}
+		if ($import)
+		{
+			if ($this->identify_user($user))
 			{
 				return false;
 			}
@@ -30,7 +38,6 @@ class User_model extends Model
 		$degree		 		= $user->get_degree();
 		$profile_photo 		= $user->get_profile_photo();
 		$visibility			= $user->get_visibility();
-		
 
 		$query  = "INSERT INTO users VALUES('$first_name', '$last_name', '$username', '$password', '$academic_year', '$term', 
 			'$major', '$level_code', '$degree', '$profile_photo', '$visibility')";
@@ -116,6 +123,27 @@ class User_model extends Model
 		$query = "SELECT * FROM users WHERE username='$username' LIMIT 1";
 
 		$result = $this->conn->query($query);
+		return $this->get_single_object_from_result($result);
+	}
+
+	// Get user by first name, last name and academic year
+	public function identify_user($user)
+	{
+		$first_name 	= $this->sanitize_string($user->get_first_name());
+		$last_name 		= $this->sanitize_string($user->get_last_name());
+		$academic_year 	= $this->sanitize_string($user->get_academic_year());
+		$term 			= $this->sanitize_string($user->get_term());
+		$major 			= $this->sanitize_string($user->get_major());
+		$degree 		= $this->sanitize_string($user->get_degree());
+		$query = "SELECT * FROM users WHERE first_name='$first_name' AND last_name='$last_name' AND academic_year='$academic_year'
+			AND term='$term' AND major='$major' AND degree='$degree'";
+		$result = $this->conn->query($query);
+		return $this->get_single_object_from_result($result);
+	}
+
+	// Get single row as an object from the result
+	private function get_single_object_from_result($result)
+	{
 		$this->handle_db_result_error($result);
 
 		if ($result->num_rows > 0)

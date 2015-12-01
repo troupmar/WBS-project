@@ -1,7 +1,7 @@
 <?php
 
-require_once('model/model.php');
-require_once('model/post.php');
+require_once(__DIR__ . '/model.php');
+require_once(__DIR__ . '/post.php');
 
 class Post_model extends Model
 {

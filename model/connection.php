@@ -1,6 +1,6 @@
 <?php
 
-require_once('database_credentials.php');
+require_once(__DIR__ .'/database_credentials.php');
 
 class Connection
 {

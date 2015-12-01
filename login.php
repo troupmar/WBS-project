@@ -8,45 +8,52 @@ class Login extends Template
 {
 	protected function render_body() 
 	{
-		echo "<h1>Log in</h1>";
-		if (! empty($_POST)) 
+		if (! isset($_SESSION['username']))
 		{
-			$errors =  $this->validate_username(isset($_POST['username']) ? $_POST['username'] : "");
-			$errors .= $this->validate_password(isset($_POST['password']) ? $_POST['password'] : "");
-
-			if ($errors)
+			echo "<h1>Log in</h1>";
+			if (! empty($_POST)) 
 			{
-				$this->render_login_form($errors);
-			}	
+				$errors =  $this->validate_username(isset($_POST['username']) ? $_POST['username'] : "");
+				$errors .= $this->validate_password(isset($_POST['password']) ? $_POST['password'] : "");
+
+				if ($errors)
+				{
+					$this->render_login_form($errors);
+				}	
+				else
+				{
+					$conn = Connection::get_instance();
+					$user_model = new User_model($conn->get_connection());
+					$user = $user_model->get_user_by_username_and_password($_POST['username'], $_POST['password']);
+					if (isset($user))
+					{
+						$_SESSION['username'] = $user->get_username();
+						$_SESSION['password'] = $user->get_password();
+						if (isset($_SESSION['redirect']))
+						{
+							// redirect to previous page if set to session
+							header("Location: " . $_SESSION['redirect']);
+						}
+						else
+						{
+							$this->redirect_to_main_page();
+						}
+						ob_flush();
+					}
+					else 
+					{
+						$this->render_login_form('Invalid username or password.');	
+					}
+				}
+			}
 			else
 			{
-				$conn = Connection::get_instance();
-				$user_model = new User_model($conn->get_connection());
-				$user = $user_model->get_user_by_username_and_password($_POST['username'], $_POST['password']);
-				if (isset($user))
-				{
-					$_SESSION['username'] = $user->get_username();
-					$_SESSION['password'] = $user->get_password();
-					if (isset($_SESSION['redirect']))
-					{
-						// redirect to previous page if set to session
-						header("Location: " . $_SESSION['redirect']);
-					}
-					else
-					{
-						$this->redirect_to_main_page();
-					}
-					ob_flush();
-				}
-				else 
-				{
-					$this->render_login_form('Invalid username or password.');	
-				}
+				$this->render_login_form();
 			}
 		}
 		else
 		{
-			$this->render_login_form();
+			echo "<p>User is already logged in. In order to log in, you first need to <a href='alumni.php?page=logout'>Log out</a>!</p>";
 		}
 	}
 

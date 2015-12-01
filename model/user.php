@@ -101,7 +101,7 @@ class User
 
 	public function set_major($major) 
 	{
-		$this->term = $major;
+		$this->major = $major;
 	}
 
 	public function set_level_code($level_code) 
