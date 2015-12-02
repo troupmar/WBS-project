@@ -1,6 +1,7 @@
 <?php
 require_once('template.php');
 require_once('model/post_model.php');
+require_once('model/post.php');
 
 class Communicate extends Template
 {
@@ -8,9 +9,10 @@ class Communicate extends Template
 	{
 		echo "<h1>Communicate</h1>";
 
-		$post = array();
-		$post['username'] = "tata";
-		$post['post'] = "basdanskjajksdfhsdjaf";
+		
+		$post = new Post();
+		$post->set_username("tata");
+		$post->set_post("basdanskjajksdfhsdjaf");
 		$post_model = new Post_model();
 		$post_model->store_post($post);
 

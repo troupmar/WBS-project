@@ -66,7 +66,7 @@ class User
 
 	public function get_visibility() 
 	{
-		return $this->visibility;
+		return ($this->visibility == null ? 2 : $this->visibility);
 	}
 
 	public function set_first_name($first_name) 

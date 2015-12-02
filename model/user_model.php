@@ -8,10 +8,8 @@ class User_model extends Model
 {
 
 	// Store the user, if exists - return false otherwise return true
-	public function store_user($user_data, $register = false, $import = false)
+	public function store_user($user, $register = false, $import = false, $update = false)
 	{
-		$user_data = $this->sanitize_array($user_data);
-		$user = $this->get_object($user_data);
 		if ($register)
 		{
 			if ($this->get_user_by_username($user->get_username()))
@@ -27,20 +25,30 @@ class User_model extends Model
 			}
 		}
 		
-		$first_name 		= $user->get_first_name();
-		$last_name 			= $user->get_last_name();
-		$username 			= $user->get_username();
-		$password 			= $this->create_password($user->get_username(), $user->get_password());
-		$academic_year	 	= $user->get_academic_year();
-		$term			 	= $user->get_term();
-		$major			 	= $user->get_major();
-		$level_code 		= $user->get_level_code();
-		$degree		 		= $user->get_degree();
-		$profile_photo 		= $user->get_profile_photo();
-		$visibility			= $user->get_visibility();
+		$first_name 		= $this->sanitize_string($user->get_first_name());
+		$last_name 			= $this->sanitize_string($user->get_last_name());
+		$username 			= $this->sanitize_string($user->get_username());
+		$password 			= $this->sanitize_string($user->get_password());
+		$password 			= $this->create_password($username, $password);
+		$academic_year	 	= $this->sanitize_string($user->get_academic_year());
+		$term			 	= $this->sanitize_string($user->get_term());
+		$major			 	= $this->sanitize_string($user->get_major());
+		$level_code 		= $this->sanitize_string($user->get_level_code());
+		$degree		 		= $this->sanitize_string($user->get_degree());
+		$profile_photo 		= $this->sanitize_string($user->get_profile_photo());
+		$visibility			= $this->sanitize_string($user->get_visibility());
 
-		$query  = "INSERT INTO users VALUES('$first_name', '$last_name', '$username', '$password', '$academic_year', '$term', 
-			'$major', '$level_code', '$degree', '$profile_photo', '$visibility')";
+		if ($update) 
+		{
+			$query = "UPDATE users SET first_name='$first_name', last_name='$last_name', academic_year='$academic_year',
+				term='$term', major='$major', level_code='$level_code', degree='$degree', profile_photo='$profile_photo',
+				visibility='$visibility' WHERE username='$username'";
+		}
+		else
+		{
+			$query  = "INSERT INTO users VALUES('$first_name', '$last_name', '$username', '$password', '$academic_year', '$term', 
+				'$major', '$level_code', '$degree', '$profile_photo', '$visibility')";
+		}	
 		$result = $this->conn->query($query);
 		$this->handle_db_result_error($result);
 
@@ -108,6 +116,7 @@ class User_model extends Model
 	{
 		$field = $this->sanitize_string($field);
 		$filter = $this->sanitize_string($filter);
+
 		$query = "SELECT * FROM users WHERE $field='$filter'";
 		$result = $this->conn->query($query);
 		$this->handle_db_result_error($result);
@@ -124,6 +133,24 @@ class User_model extends Model
 
 		$result = $this->conn->query($query);
 		return $this->get_single_object_from_result($result);
+	}
+
+	// Get user by username & password
+	public function get_user_by_username_and_password($username, $password)
+	{
+		$username = $this->sanitize_string($username);
+		$password = $this->sanitize_string($password);
+
+		$user = $this->get_user_by_username($username);
+		if (! $user)
+		{
+			return null;
+		}
+		if ($this->create_password($username, $password) === $user->get_password())
+		{
+			return $user;
+		}
+		return null;
 	}
 
 	// Get user by first name, last name and academic year
@@ -155,21 +182,6 @@ class User_model extends Model
 		{
 			return null;
 		}
-	}
-
-	// Get user by username & password
-	public function get_user_by_username_and_password($username, $password)
-	{
-		$user = $this->get_user_by_username($username);
-		if (! $user)
-		{
-			return null;
-		}
-		if ($this->create_password($user->get_username(), $password) === $user->get_password())
-		{
-			return $user;
-		}
-		return null;
 	}
 
 	// Get a row from a database representing a user and transform it to User object

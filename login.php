@@ -22,8 +22,7 @@ class Login extends Template
 				}	
 				else
 				{
-					$conn = Connection::get_instance();
-					$user_model = new User_model($conn->get_connection());
+					$user_model = new User_model();
 					$user = $user_model->get_user_by_username_and_password($_POST['username'], $_POST['password']);
 					if (isset($user))
 					{

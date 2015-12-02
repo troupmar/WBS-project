@@ -22,14 +22,16 @@ class Register extends Template
 			}
 			else 
 			{
-				$user = array('first_name' => $_POST['first-name'], 'last_name' => $_POST['last-name'],
-							  'username' => $_POST['username'], 'password' => $_POST['password'], 
-							  'academic_year' => $_POST['academic-year']);
+				$user = new User();
+				$user->set_first_name($_POST['first-name']);
+				$user->set_last_name($_POST['last-name']);
+				$user->set_username($_POST['username']);
+				$user->set_password($_POST['password']);
+				$user->set_academic_year($_POST['academic-year']);
+			
+				$user_model = new User_model();
 
-				$conn = Connection::get_instance();
-				$user_model = new User_model($conn->get_connection());
-
-				if ($user_model->store_user($user, true) == false)
+				if ($user_model->store_user($user, false, false, true) == false)
 				{
 					$this->render_register_form('Username already exists.');
 				}

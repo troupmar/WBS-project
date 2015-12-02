@@ -5,13 +5,11 @@ require_once(__DIR__ . '/post.php');
 
 class Post_model extends Model
 {
-	public function store_post($post_data)
+	public function store_post($post)
 	{
-		$post_data = $this->sanitize_array($post_data);
-		
-		$username 		= $post_data['username'];
+		$username 		= $this->sanitize_string($post->get_username());
 		$insert_time 	= date ("Y-m-d H:i:s");
-		$post 			= $post_data['post'];
+		$post 			= $this->sanitize_string($post->get_post());
 
 		$query  = "INSERT INTO posts VALUES(null, '$username', '$insert_time', '$post')";
 		$result = $this->conn->query($query);
