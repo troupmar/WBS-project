@@ -167,9 +167,9 @@ class User
 			return "Gradudation year input cannot be empty!<br />";
 		}
 	
-		if (! preg_match("/^[0-9]{4}-[0-9]{2}$/", $this->academic_year)) 
+		if (! preg_match("/^[0-9]{4}-[0-9]{2}$/", $this->academic_year))
 		{
-			return "Academic year wrong format! Correct input i.e. 2003-04";
+			return "Academic year wrong format! Correct input i.e. 2003-04.<br />";
 		}
 		$years = explode("-", $this->academic_year);
 		$next_year = $years[0] + 1;
@@ -181,6 +181,46 @@ class User
 		return null;
 	}
 
+	public function validate_term()
+	{
+		if (!$this->term) return null;
+		if (!preg_match("/^[0-9]{6}$/", $this->term))
+		{
+			return "Term wrong format! Correct input should consist of 6 digits.<br />";
+		}
+		return null;
+	}
+
+	public function validate_major()
+	{
+		if (!$this->major) return null;
+		if (!preg_match("/^[A-Z]{2,6}$/", $this->major))
+		{
+			return "Major wrong format! Correct input should consist of 2-6 capital letters.<br />";
+		}
+		return null;
+	}
+
+	public function validate_level_code()
+	{
+		if (!$this->level_code) return null;
+		if (!preg_match("/^[A-Z]{2,6}$/", $this->level_code))
+		{
+			return "Level code wrong format! Correct input should consist of 2-6 capital letters.<br />";
+		}
+		return null;
+	}
+
+	public function validate_degree()
+	{
+		if (!$this->degree) return null;
+		if (!preg_match("/^[A-Z]{2,6}$/", $this->degree))
+		{
+			return "Level code wrong format! Correct input should consist of 2-6 capital letters.<br />";
+		}
+		return null;
+	}
+
 	public function validate_profile_photo($file_name, $size)
 	{
 		$file_type = pathinfo($file_name, PATHINFO_EXTENSION);
@@ -188,6 +228,9 @@ class User
 		{
     		return "Only JPG, JPEG & PNG are allowed for a profile photo!<br />";
     	}
+    	if ($size > 500000) {
+	    	return "A file cannot be larger than 500 000 B!<br />";
+	    }
 
     	return null;
 	}

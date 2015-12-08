@@ -24,32 +24,41 @@ class Edit extends Template
 
 			if (!empty($_POST)) 
 			{
-				$user->set_first_name(isset($_POST['first-name']) ? $this->sanitize_string($_POST['first-name']) : "");
-				$user->set_last_name(isset($_POST['last-name']) ? $this->sanitize_string($_POST['last-name']) : "");
-				$user->set_academic_year(isset($_POST['academic-year']) ? $this->sanitize_string($_POST['academic-year']) : "");
-				$user->set_term(isset($_POST['term']) ? $this->sanitize_string($_POST['term']) : "");
-				$user->set_major(isset($_POST['major']) ? $this->sanitize_string($_POST['major']) : "");
-				$user->set_level_code(isset($_POST['level_code']) ? $this->sanitize_string($_POST['level_code']) : "");
-				$user->set_degree(isset($_POST['degree']) ? $this->sanitize_string($_POST['degree']) : "");
-				$user->set_visibility(isset($_POST['visibility']) ? $this->sanitize_string($_POST['visibility']) : "");
+				// CSRF protection
+				if ($_POST['session-id'] == $_COOKIE["PHPSESSID"]) {
+					$user->set_first_name(isset($_POST['first-name']) ? $this->sanitize_string($_POST['first-name']) : "");
+					$user->set_last_name(isset($_POST['last-name']) ? $this->sanitize_string($_POST['last-name']) : "");
+					$user->set_academic_year(isset($_POST['academic-year']) ? $this->sanitize_string($_POST['academic-year']) : "");
+					$user->set_term(isset($_POST['term']) ? $this->sanitize_string($_POST['term']) : "");
+					$user->set_major(isset($_POST['major']) ? $this->sanitize_string($_POST['major']) : "");
+					$user->set_level_code(isset($_POST['level-code']) ? $this->sanitize_string($_POST['level-code']) : "");
+					$user->set_degree(isset($_POST['degree']) ? $this->sanitize_string($_POST['degree']) : "");
+					$user->set_visibility(isset($_POST['visibility']) ? $this->sanitize_string($_POST['visibility']) : "");
 
-				$errors  = $user->validate_first_name();
-				$errors .= $user->validate_last_name();
-				$errors .= $user->validate_academic_year();
-				if (!empty($_FILES['profile-photo']['name'])) 
-				{
-					$errors .= $user->validate_profile_photo($_FILES['profile-photo']['name'], $_FILES['profile-photo']['size']);
-				}
+					$errors  = $user->validate_first_name();
+					$errors .= $user->validate_last_name();
+					$errors .= $user->validate_academic_year();
+					$errors .= $user->validate_term();
+					$errors .= $user->validate_major();
+					$errors .= $user->validate_level_code();
+					$errors .= $user->validate_degree();
 
-				if ($errors)
-				{
-					$this->render_edit_form($user, $errors);
-				}
-				else
-				{
-					$this->handle_file_upload($user, $_FILES['profile-photo']);
-					$user_model = new User_model();
-					$user_model->store_user($user, false, false, true);
+					if (!empty($_FILES['profile-photo']['name'])) 
+					{
+						$errors .= $user->validate_profile_photo($_FILES['profile-photo']['name'], $_FILES['profile-photo']['size']);
+					}
+
+					if ($errors)
+					{
+						$this->render_edit_form($user, $errors);
+					}
+					else
+					{
+						$this->handle_file_upload($user, $_FILES['profile-photo']);
+						$user_model = new User_model();
+						$user_model->store_user($user, false, false, true);
+						header('Location: alumni.php?page=profile&username=' . $this->username);
+					}
 				}
 					
 			}
@@ -147,12 +156,20 @@ class Edit extends Template
 			    <input type='text' name='degree' class='form-control' value='$degree'>
 
 			    <label>Profile photo</label>
-			    <input type='file' name='profile-photo'>
+			    <input type='file' name='profile-photo' id='profile-photo'>
 
-			    <input type='hidden' name='session-id'>
+			    <input type='hidden' name='session-id' id='session-id' value=''>
 
 				<button type='submit' class='btn btn-default'>Edit profile</button>
 			  </form>";
+	}
+
+	protected function get_js_files() 
+	{
+		$js_files = parent::get_js_files();
+		array_push($js_files, "edit.js");
+		array_push($js_files, "validation.js");
+		return $js_files;
 	}
 }
 
