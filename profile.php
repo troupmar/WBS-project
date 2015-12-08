@@ -8,7 +8,9 @@ class Profile extends Template
 
 	public function __construct($username)
 	{
+		parent::__construct();
 		$user_model = new User_model();
+		$username = $this->sanitize_string($username);
 		$this->user = $user_model->get_user_by_username($username);
 	}
 
@@ -18,14 +20,16 @@ class Profile extends Template
 		if (($this->user->get_visibility() == 1 && isset($_SESSION['username'])) || $this->user->get_visibility() == 2)
 		{
 			echo "<h1>" . $this->user->get_first_name() . " " . $this->user->get_last_name() . "</h1>";
+			$images_dir = "./public/profile_images/";
 			if ($this->user->get_profile_photo())
 			{
-				$photo_path = $this->user->get_profile_photo();
-				echo "<img src='./public/profile_images/$photo_path' alt='Profile image' height='200' width='200'>";	
+				$photo_path = $images_dir . $this->user->get_profile_photo();
+				echo "<img src='$photo_path' alt='Profile image' height='200' width='200'>";	
 			} 
 			else
 			{
-				echo "<img src='./public/profile_images/placeholder.jpg' alt='Profile image' height='200' width='200'>";
+				$photo_path = $images_dir . "placeholder.jpg";
+				echo "<img src='$photo_path' alt='Profile image' height='200' width='200'>";
 			}
 
 			$username 	 	= $this->user->get_username();
@@ -48,7 +52,6 @@ class Profile extends Template
 		{
 			echo "<p>Sorry, you are not authorized to see this profile. You can try to <a href='alumni.php?page=login'>Log in</a>!</p>"; 
 		}
-
 		
 	}
 }

@@ -8,6 +8,7 @@ ini_set("display_errors", 1);
 
 require_once('main.php');
 require_once('profile.php');
+require_once('edit.php');
 require_once('login.php');
 require_once('register.php');
 require_once('communicate.php');
@@ -25,7 +26,16 @@ if (isset($_GET['page']))
 			$page = new Profile($_GET['username']);
 			$page->render('Profile');
 			break;
-		case "login":
+		case "edit":
+			if (! isset($_GET['username'])) 
+			{
+				header("HTTP/1.0 404 Not Found");
+				die();
+			} 
+			$page = new Edit($_GET['username']);
+			$page->render('Edit profile');
+			break;
+ 		case "login":
 			$page = new Login();
 			$page->render('Log in');
 			break;

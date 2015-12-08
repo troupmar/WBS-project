@@ -139,6 +139,58 @@ class User
             'visibility'		=> $this->visibility
         ));
     }
+
+   	public function validate_first_name()
+	{
+		return ($this->first_name == "") ? "First name cannot be empty!<br />" : null;
+	}
+
+	public function validate_last_name()
+	{
+		return ($this->last_name == "") ? "Last name cannot be empty!<br />" : null;
+	}
+
+	public function validate_username()
+	{
+		return ($this->username == "") ? "Username cannot be empty!<br />" : null;
+	}
+
+	public function validate_password()
+	{
+		return ($this->password == "") ? "Password cannot be empty!<br />" : null;
+	}
+
+	public function validate_academic_year()
+	{
+		if ($this->academic_year == "") 
+		{
+			return "Gradudation year input cannot be empty!<br />";
+		}
+	
+		if (! preg_match("/^[0-9]{4}-[0-9]{2}$/", $this->academic_year)) 
+		{
+			return "Academic year wrong format! Correct input i.e. 2003-04";
+		}
+		$years = explode("-", $this->academic_year);
+		$next_year = $years[0] + 1;
+		//echo $years[0] . " " . $years[1] . " " . date("Y") . " " . $academic_year; die;
+		if ($years[0] < 1900 || $years[1] > date("Y") || $years[1] != substr($next_year, 2)) {
+			return "Academic year must be between 1900 and " . date("Y") . "<br />";
+		} 
+
+		return null;
+	}
+
+	public function validate_profile_photo($file_name, $size)
+	{
+		$file_type = pathinfo($file_name, PATHINFO_EXTENSION);
+		if (strcasecmp($file_type, "jpg") != 0 && strcasecmp($file_type, "png") != 0 && strcasecmp($file_type, "jpeg") != 0) 
+		{
+    		return "Only JPG, JPEG & PNG are allowed for a profile photo!<br />";
+    	}
+
+    	return null;
+	}
 }
 
 ?>

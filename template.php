@@ -1,7 +1,17 @@
 <?php
 
+require_once(__DIR__ . '/model/connection.php');
+
 abstract class Template
 {
+	protected $conn;
+
+	public function __construct() 
+	{
+		$connection = Connection::get_instance();
+		$this->conn = $connection->get_connection();
+	}
+
 	public function render($title) 
 	{
 		echo "
@@ -24,20 +34,20 @@ abstract class Template
 			   <li class='main-logo'><a href='alumni.php'>Alumni.edu</a></li>
 			   <li><a href=''>Store</a></li>
 			   <li><a href='alumni.php?page=communicate'>Communicate</a></li>
+			   <li><a href='alumni.php?page=register'>Register</a></li>
 			   ";
 			    if (isset($_SESSION['username']) && isset($_SESSION['password']))
 			    {
 			    	$username = $_SESSION['username'];
 					echo "
 				   <li>$username</li>
-				   <li><a href=''>Edit profile</a></li>
+				   <li><a href='alumni.php?page=edit&username=$username'>Edit profile</a></li>
 				   <li><a href='alumni.php?page=logout'>Log out</a></li>
 				   ";
 			    } 
 			    else
 				{
 					echo "
-				   <li><a href='alumni.php?page=register'>Register</a></li>
 				   <li><a href='alumni.php?page=login'>Log in</a></li>
 				   ";
 				}
@@ -72,6 +82,23 @@ abstract class Template
 		$uri  = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
 		$page = 'alumni.php'; 
 		header("Location: http://$host$uri/$page");
+	}
+
+	public function sanitize_string($string)
+	{
+		$string = stripcslashes($string);
+		$string = $this->conn->real_escape_string($string);
+		return htmlentities($string);
+	}
+	
+	public function sanitize_array($array) 
+	{
+		$sanitized_array = array();
+		foreach($array as $key => $value)
+		{
+			$sanitized_array[$key] = $this->sanitize_string($value);
+		}
+		return $sanitized_array;
 	}
 }
 

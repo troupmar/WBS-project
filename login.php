@@ -8,13 +8,18 @@ class Login extends Template
 {
 	protected function render_body() 
 	{
-		if (! isset($_SESSION['username']))
+		if (!isset($_SESSION['username']))
 		{
 			echo "<h1>Log in</h1>";
 			if (! empty($_POST)) 
 			{
-				$errors =  $this->validate_username(isset($_POST['username']) ? $_POST['username'] : "");
-				$errors .= $this->validate_password(isset($_POST['password']) ? $_POST['password'] : "");
+				$user = new User();
+				$user->set_username(isset($_POST['username']) ? $this->sanitize_string($_POST['username']) : "");
+				$user->set_password(isset($_POST['password']) ? $this->sanitize_string($_POST['password']) : "");
+
+
+				$errors =  $user->validate_username();
+				$errors .= $user->validate_password();
 
 				if ($errors)
 				{
@@ -23,7 +28,7 @@ class Login extends Template
 				else
 				{
 					$user_model = new User_model();
-					$user = $user_model->get_user_by_username_and_password($_POST['username'], $_POST['password']);
+					$user = $user_model->get_user_by_username_and_password($user->get_username(), $user->get_password());
 					if (isset($user))
 					{
 						$_SESSION['username'] = $user->get_username();
@@ -75,16 +80,6 @@ class Login extends Template
 
 				<button type='submit'>Log in</button>
 			  </form>";
-	}
-
-	private function validate_username($username)
-	{
-		return ($username == "") ? "Username cannot be empty!<br />" : null;
-	}
-
-	private function validate_password($password)
-	{
-		return ($password == "") ? "Password cannot be empty!<br />" : null;
 	}
 
 }

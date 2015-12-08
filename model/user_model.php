@@ -25,18 +25,18 @@ class User_model extends Model
 			}
 		}
 		
-		$first_name 		= $this->sanitize_string($user->get_first_name());
-		$last_name 			= $this->sanitize_string($user->get_last_name());
-		$username 			= $this->sanitize_string($user->get_username());
-		$password 			= $this->sanitize_string($user->get_password());
+		$first_name 		= $user->get_first_name();
+		$last_name 			= $user->get_last_name();
+		$username 			= $user->get_username();
+		$password 			= $user->get_password();
 		$password 			= $this->create_password($username, $password);
-		$academic_year	 	= $this->sanitize_string($user->get_academic_year());
-		$term			 	= $this->sanitize_string($user->get_term());
-		$major			 	= $this->sanitize_string($user->get_major());
-		$level_code 		= $this->sanitize_string($user->get_level_code());
-		$degree		 		= $this->sanitize_string($user->get_degree());
-		$profile_photo 		= $this->sanitize_string($user->get_profile_photo());
-		$visibility			= $this->sanitize_string($user->get_visibility());
+		$academic_year	 	= $user->get_academic_year();
+		$term			 	= $user->get_term();
+		$major			 	= $user->get_major();
+		$level_code 		= $user->get_level_code();
+		$degree		 		= $user->get_degree();
+		$profile_photo 		= $user->get_profile_photo();
+		$visibility			= $user->get_visibility();
 
 		if ($update) 
 		{
@@ -65,6 +65,22 @@ class User_model extends Model
 		return $this->get_objects_from_table($result);
 	}
 
+	// Get all users sorted by given parameter and in given order: ASC | DESC
+	private function get_sorted_users($param, $order)
+	{
+		$param = $this->sanitize_string($param);
+		$query = "SELECT * FROM users ORDER BY $param";
+		if ($order == "DESC")
+		{
+			$query .= " DESC";
+		}
+		
+		$result = $this->conn->query($query);
+		$this->handle_db_result_error($result);
+		$users = $this->get_objects_from_table($result);
+		return $users;
+	}
+
 	// Get all users sorted by last name - parameter order: ASC | DESC
 	public function get_users_sorted_by_last_name($order)
 	{
@@ -77,16 +93,13 @@ class User_model extends Model
 		return $this->get_sorted_users('academic_year', $order);
 	}
 
-	// Get all users sorted by given parameter and in given order: ASC | DESC
-	private function get_sorted_users($param, $order)
+	// Get all users filtered by given field with given value
+	private function get_filtered_users($field, $filter)
 	{
-		$param = $this->sanitize_string($param);
-		$query = "SELECT * FROM users ORDER BY $param";
-		if ($order == "DESC")
-		{
-			$query .= " DESC";
-		}
-		
+		$field = $this->sanitize_string($field);
+		$filter = $this->sanitize_string($filter);
+
+		$query = "SELECT * FROM users WHERE $field='$filter'";
 		$result = $this->conn->query($query);
 		$this->handle_db_result_error($result);
 		$users = $this->get_objects_from_table($result);
@@ -111,24 +124,9 @@ class User_model extends Model
 		return $this->get_filtered_users('last_name', $filter);
 	}
 
-	// Get all users filtered by given field with given value
-	private function get_filtered_users($field, $filter)
-	{
-		$field = $this->sanitize_string($field);
-		$filter = $this->sanitize_string($filter);
-
-		$query = "SELECT * FROM users WHERE $field='$filter'";
-		$result = $this->conn->query($query);
-		$this->handle_db_result_error($result);
-		$users = $this->get_objects_from_table($result);
-		return $users;
-	}
-
-
 	// Get user by username
 	public function get_user_by_username($username)
 	{
-		$username = $this->sanitize_string($username);
 		$query = "SELECT * FROM users WHERE username='$username' LIMIT 1";
 
 		$result = $this->conn->query($query);
@@ -138,9 +136,6 @@ class User_model extends Model
 	// Get user by username & password
 	public function get_user_by_username_and_password($username, $password)
 	{
-		$username = $this->sanitize_string($username);
-		$password = $this->sanitize_string($password);
-
 		$user = $this->get_user_by_username($username);
 		if (! $user)
 		{
@@ -156,12 +151,12 @@ class User_model extends Model
 	// Get user by first name, last name and academic year
 	public function identify_user($user)
 	{
-		$first_name 	= $this->sanitize_string($user->get_first_name());
-		$last_name 		= $this->sanitize_string($user->get_last_name());
-		$academic_year 	= $this->sanitize_string($user->get_academic_year());
-		$term 			= $this->sanitize_string($user->get_term());
-		$major 			= $this->sanitize_string($user->get_major());
-		$degree 		= $this->sanitize_string($user->get_degree());
+		$first_name 	= $user->get_first_name();
+		$last_name 		= $user->get_last_name();
+		$academic_year 	= $user->get_academic_year();
+		$term 			= $user->get_term();
+		$major 			= $user->get_major();
+		$degree 		= $user->get_degree();
 		$query = "SELECT * FROM users WHERE first_name='$first_name' AND last_name='$last_name' AND academic_year='$academic_year'
 			AND term='$term' AND major='$major' AND degree='$degree'";
 		$result = $this->conn->query($query);

@@ -31,16 +31,18 @@ else
 	for ($i=$offset; $i<count($worksheet); $i++)
 	{
 		$user_row = $worksheet[$i];
-		$user = [];
-		$user['first_name'] = $user_row[3];
-		$user['last_name'] = $user_row[2];
-		$user['username'] = substr($user_row[3], 0, 2) . substr($user_row[2], 0, 2) . rand(pow(10, 4-1), pow(10, 4)-1);
-		$user['password'] = substr($user_row[3], 0, 2) . substr($user_row[2], 0, 2) . rand(pow(10, 4-1), pow(10, 4)-1);;
-		$user['academic_year'] = $user_row[0];
-		$user['term'] = $user_row[1];
-		$user['major'] = $user_row[4];
-		$user['level_code'] = $user_row[5];
-		$user['degree'] = $user_row[6];
+		
+		$user = new User();
+		$user->set_first_name($user_row[3]);
+		$user->set_last_name($user_row[2]);
+		$random_four_digits = rand(pow(10, 4-1), pow(10, 4)-1);
+		$user->set_username(substr($user_row[3], 0, 2) . substr($user_row[2], 0, 2) . $random_four_digits);
+		$user->set_password(substr($user_row[3], 0, 2) . substr($user_row[2], 0, 2) . $random_four_digits);
+		$user->set_academic_year($user_row[0]);
+		$user->set_term($user_row[1]);
+		$user->set_major($user_row[4]);
+		$user->set_level_code($user_row[5]);
+		$user->set_degree($user_row[6]);
 		
 		$user_model = new User_Model();
 		$user_model->store_user($user, false, true);
