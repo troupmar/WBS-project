@@ -7,9 +7,9 @@ class Post_model extends Model
 {
 	public function store_post($post)
 	{
-		$username 		= $this->sanitize_string($post->get_username());
+		$username 		= $post->get_username();
 		$insert_time 	= date ("Y-m-d H:i:s");
-		$post 			= $this->sanitize_string($post->get_post());
+		$post 			= $post->get_post();
 
 		$query  = "INSERT INTO posts VALUES(null, '$username', '$insert_time', '$post')";
 		$result = $this->conn->query($query);
@@ -21,7 +21,7 @@ class Post_model extends Model
 	// Get all posts
 	public function get_posts($limit = null)
 	{	
-		$query = "SELECT * FROM posts ORDER BY insert_time";
+		$query = "SELECT * FROM posts ORDER BY insert_time DESC";
 		
 		if ($limit) 
 		{
