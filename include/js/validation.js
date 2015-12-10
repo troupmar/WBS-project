@@ -98,7 +98,8 @@ function validateTerm(field) {
 
 function validateMajor(field) {
 	if (field == "") return "";
-	if (!field.match(/^[A-Z]{2,4}$/)) {
+	console.log(field);
+	if (!field.match(/^[A-Z]{2,6}$/)) {
 		return "Major wrong format! Correct input should consist of 2-6 capital letters.<br />";
 	}
 	return "";
@@ -106,7 +107,7 @@ function validateMajor(field) {
 
 function validateLevelCode(field) {
 	if (field == "") return "";
-	if (!field.match(/^[A-Z]{2,4}$/)) {
+	if (!field.match(/^[A-Z]{2,6}$/)) {
 		return "Level code wrong format! Correct input should consist of 2-6 capital letters. js<br />";
 	}
 	return "";
@@ -114,7 +115,7 @@ function validateLevelCode(field) {
 
 function validateDegree(field) {
 	if (field == "") return "";
-	if (!field.match(/^[A-Z]{2,4}$/)) {
+	if (!field.match(/^[A-Z]{2,6}$/)) {
 		return "Degree wrong format! Correct input should consist of 2-6 capital letters.<br />";
 	}
 	return "";

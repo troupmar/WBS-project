@@ -216,7 +216,7 @@ class User
 		if (!$this->degree) return null;
 		if (!preg_match("/^[A-Z]{2,6}$/", $this->degree))
 		{
-			return "Level code wrong format! Correct input should consist of 2-6 capital letters.<br />";
+			return "Degree wrong format! Correct input should consist of 2-6 capital letters.<br />";
 		}
 		return null;
 	}
