@@ -125,7 +125,8 @@ class Edit extends Template
 		}
 
 		echo "<p id='error-message'>$error_message</p>
-			  <form action='alumni.php?page=edit&username=$username' method='post' enctype='multipart/form-data'>
+			  <form action='alumni.php?page=edit&username=$username' method='post' enctype='multipart/form-data' 
+			  	onSubmit='return validateEditForm(this);'>
 
 			  	<label>Select profile visibility</label>
 			    <select name='visibility'>

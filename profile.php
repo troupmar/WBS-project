@@ -17,7 +17,8 @@ class Profile extends Template
 
 	protected function render_body() 
 	{
-		if (($this->user->get_visibility() == 1 && isset($_SESSION['username'])) || $this->user->get_visibility() == 2)
+		if (($this->user->get_visibility() == 1 && isset($_SESSION['username'])) || $this->user->get_visibility() == 2 || 
+			(isset($_SESSION['username']) && $_SESSION['username'] == $this->user->get_username()))
 		{
 			echo "<h1>" . $this->user->get_first_name() . " " . $this->user->get_last_name() . "</h1>";
 			$images_dir = "./public/profile_images/";
